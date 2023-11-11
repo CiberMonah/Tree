@@ -1,0 +1,8 @@
+*.save
+*.cpp.save
+*.txt
+*.exe
+*.dot
+*.png
+*.html
+*.json
