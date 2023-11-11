@@ -1,10 +1,64 @@
 #include "Tree.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 err_type tree_init(TREE* tree, Elem_t root_value) {
     tree->tree_size = 0;
     return op_new(&tree->root, root_value);
+}
+
+static err_type free_nodes(NODE* node) {
+    if(!node) {
+        return NO_ERR;
+    }
+
+    free_nodes(node->left);
+    free_nodes(node->right);
+    free(node);
+
+    return NO_ERR;
+}
+
+err_type free_tree(TREE* tree) {
+    tree->tree_size = -1;
+
+    free_nodes(tree->root);
+
+    return NO_ERR;
+}
+
+static err_type tree_delete(NODE* root) {
+    if(!root) {
+        return NO_ERR;
+    }
+    tree_delete(root->left);
+    tree_delete(root->right);
+    root->left = nullptr;
+    root->right = nullptr;
+    free(root);
+
+    return NO_ERR;
+}
+
+err_type branch_delete(NODE* root, const char* str) {
+
+    if(strcmp(str, "left" ) == 0) {
+        tree_delete(root->left);
+        root->left = nullptr;
+    } else if(strcmp(str, "right" ) == 0) {
+        tree_delete(root->right);
+        root->right = nullptr;
+    } else if(strcmp(str, "both")) {
+        tree_delete(root->left);
+        root->left = nullptr;
+        tree_delete(root->right);
+        root->right = nullptr;
+    } else {
+        printf("Wrong code in branch delete func\n");
+        return ERROR;
+    }
+    return NO_ERR;
 }
 
 err_type op_new(NODE** node, Elem_t value) {
@@ -19,38 +73,38 @@ err_type op_new(NODE** node, Elem_t value) {
     return NO_ERR;
 }
 
-void pre_order(NODE* node) {
+void print_pre_order(FILE* out, NODE* node) {
     if(!node) {
-        printf("nil ");
+        fprintf(out, "nil ");
         return;
     }
-    printf("( ");
-    printf("%d ", node->data);
-    pre_order(node->left);
-    pre_order(node->right);
-    printf(") ");
+    fprintf(out, "( ");
+    fprintf(out, "%d ", node->data);
+    print_pre_order(out, node->left);
+    print_pre_order(out, node->right);
+    fprintf(out, ") ");
 }
 
-void in_order(NODE* node) {
+void print_in_order(FILE* out, NODE* node) {
     if(!node) {
-        printf("nil ");
+        fprintf(out, "nil ");
         return;
     }
-    printf("( ");
-    pre_order(node->left);
-    printf("%d ", node->data);
-    pre_order(node->right);
-    printf(") ");
+    fprintf(out, "( ");
+    print_in_order(out, node->left);
+    fprintf(out, "%d ", node->data);
+    print_in_order(out, node->right);
+    fprintf(out, ") ");
 }
 
-void post_order(NODE* node) {
+void print_post_order(FILE* out, NODE* node) {
     if(!node) {
-        printf("nil ");
+        fprintf(out, "nil ");
         return;
     }
-    printf("( ");
-    pre_order(node->left);
-    pre_order(node->right);
-    printf("%d ", node->data);
-    printf(") ");
+    fprintf(out, "( ");
+    print_post_order(out, node->left);
+    print_post_order(out, node->right);
+    fprintf(out, "%d ", node->data);
+    fprintf(out, ") ");
 }
