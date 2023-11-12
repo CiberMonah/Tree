@@ -3,9 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 
-err_type tree_init(TREE* tree, Elem_t root_value) {
+err_type tree_init(TREE* tree) {
     tree->tree_size = 0;
-    return op_new(&tree->root, root_value);
+    tree->root = NULL;
+    return NO_ERR;
 }
 
 static err_type free_nodes(NODE* node) {
@@ -49,7 +50,7 @@ err_type branch_delete(NODE* root, const char* str) {
     } else if(strcmp(str, "right" ) == 0) {
         tree_delete(root->right);
         root->right = nullptr;
-    } else if(strcmp(str, "both")) {
+    } else if(strcmp(str, "both") == 0) {
         tree_delete(root->left);
         root->left = nullptr;
         tree_delete(root->right);
@@ -66,7 +67,7 @@ err_type op_new(NODE** node, Elem_t value) {
 
     if(node == nullptr)
         return MEM_ALL_ERR;
-    (*node)->data = value;
+    (*node)->data = strdup(value);
     (*node)->right = nullptr;
     (*node)->left = nullptr;
 
@@ -79,7 +80,7 @@ void print_pre_order(FILE* out, NODE* node) {
         return;
     }
     fprintf(out, "( ");
-    fprintf(out, "%d ", node->data);
+    fprintf(out, format, node->data);
     print_pre_order(out, node->left);
     print_pre_order(out, node->right);
     fprintf(out, ") ");
@@ -92,7 +93,7 @@ void print_in_order(FILE* out, NODE* node) {
     }
     fprintf(out, "( ");
     print_in_order(out, node->left);
-    fprintf(out, "%d ", node->data);
+    fprintf(out, format, node->data);
     print_in_order(out, node->right);
     fprintf(out, ") ");
 }
@@ -105,6 +106,6 @@ void print_post_order(FILE* out, NODE* node) {
     fprintf(out, "( ");
     print_post_order(out, node->left);
     print_post_order(out, node->right);
-    fprintf(out, "%d ", node->data);
+    fprintf(out, format, node->data);
     fprintf(out, ") ");
 }
