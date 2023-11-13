@@ -10,7 +10,7 @@ int main () {
         printf("Dump file creating error\n");
     }
 
-    menu("akinator.txt", df);
+    menu("akinator.txt", "dump_akinator.txt");
 
     fclose(df);
 

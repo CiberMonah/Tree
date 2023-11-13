@@ -18,7 +18,8 @@ static err_type parse_data(FILE* fp, FILE* dump_file, NODE** root) {
     
     fscanf(fp, format, word);
 
-    fprintf(dump_file, "%s\n", word);
+    if(strcmp(word, "(") != 0)
+        fprintf(dump_file, "%s\n", word);
 
     if(strcmp(word, "(") == 0) {
         fscanf(fp, format, word);
@@ -26,9 +27,9 @@ static err_type parse_data(FILE* fp, FILE* dump_file, NODE** root) {
 
         op_new(root, word);
 
-        fprintf(dump_file, "parsing left tree...\n");
+        fprintf(dump_file, "parsing left tree...%s\n", word);
         parse_data(fp, dump_file, &((*root)->left));
-        fprintf(dump_file, "parsing right tree...\n");
+        fprintf(dump_file, "parsing right tree...%s\n", word);
         parse_data(fp, dump_file, &((*root)->right));
         fprintf(dump_file, "finished parsing %s\n", word);
         fscanf(fp, "%s ", word);
@@ -46,7 +47,7 @@ static err_type load_data(NODE** root, FILE* fp, FILE* dump_file) {
     parse_data(fp, dump_file, root);
     printf("Loaded succesful\n");
     rewind(fp);
-
+    fprintf(dump_file, "\nLOADED SUCCESFUL\n");
     return NO_ERR;
 }
 
@@ -55,7 +56,7 @@ static err_type session (NODE* root) {
         return NO_ERR;
 
     char ch = 0;
-    char answer[20] = "nothing", question[20] = "nothing";
+    char answer[50] = "nothing", question[50] = "nothing";
 
     printf("%s?\n", root->data);
     printf("Y/N?: ");
@@ -76,9 +77,15 @@ static err_type session (NODE* root) {
     case 'N':
         if(root->left == nullptr) {
             printf("WHO IS IT?????\n");
-            scanf("%s", answer);
+            if(scanf("%s", answer) != 1) {
+                printf("Only one word in question and answer\n");  
+                return ERROR;
+            }
             printf("HOW IT DIFFER?????      \\_(:/))_/\n");
-            scanf("%s", question);
+            if(scanf("%s", question) != 1) {
+                printf("Only one word in question and answer\n");  
+                return ERROR;
+            }
             op_new(&root->right, answer);
             op_new(&root->left, root->data);
             root->data = strdup(question);
@@ -96,16 +103,37 @@ static err_type session (NODE* root) {
     return NO_ERR;
 }
 
-err_type menu(const char* data_file_name, FILE* dump_file) {
+static int give_definition(NODE* root, char* key) {
+    if(!root) {
+        return 0;
+    }
+
+    if(strcmp(root->data, key) == 0) {
+        printf("%s ", key);
+        return 1;
+    }
+    
+    if(give_definition(root->left, key)) {
+        printf("not %s ", root->data);
+        return 1;
+    } else if(give_definition(root->right, key)) {
+        printf("%s ", root->data);
+        return 1;
+    }
+
+    return 0;
+}
+
+err_type menu(const char* data_file_name, const char* dump_file_name) {
     int com;
     TREE tree = {};
     FILE* in  = nullptr;
     FILE* out  = nullptr;
-    
-
+    FILE* dump_file = nullptr;
+    char subject[50] = "";
     tree_init(&tree);
 
-    printf("commands:\n1 - load data\n2 - save - data\n3 - print_data\n4 - start session\n");
+    printf("commands:\n1 - load data\n2 - save_data\n3 - print_data\n4 - start session\n5 - give definition\n");
 
     while((scanf("%d", &com))) {
         switch(com) {
@@ -114,20 +142,27 @@ err_type menu(const char* data_file_name, FILE* dump_file) {
                 return FILE_OPEN_ERR;
             }
 
+            if((dump_file = fopen(dump_file_name, "w")) == nullptr) {
+                return FILE_OPEN_ERR;
+            }
+
             load_data(&tree.root, in, dump_file);
 
             fclose(in);
+            fclose(dump_file);
 
             break;
 
         case 2:
             if((out = fopen(data_file_name, "w")) == nullptr) {
                 return FILE_OPEN_ERR;
+            
             }
-
             save_data(tree.root, out);
 
             fclose(out);
+
+            printf("Saved!\n");
             break;
 
         case 3:
@@ -139,6 +174,14 @@ err_type menu(const char* data_file_name, FILE* dump_file) {
         case 4:
             session(tree.root);
 
+            break;
+
+        case 5:
+            printf("I CAN GIVE DEFINITION FOR ANYTHING!\nType your subject:\n");
+            scanf("%s", subject);
+            if(!give_definition(tree.root, subject))
+                printf("OOOOPS I CANT GIVE DEFINITION FOR IT...:(");
+            printf("\n");
             break;
         default:
             return NO_ERR;
