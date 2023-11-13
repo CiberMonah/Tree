@@ -85,8 +85,6 @@ void make_html_dump(FILE* dot_file, TREE* tree) {
 
     make_dot_dump(file_dot, tree);
 
-    
-
     fclose(file_dot);                                   //dot file created
 
                    //0123456789012345678901234567890123456
@@ -98,22 +96,7 @@ void make_html_dump(FILE* dot_file, TREE* tree) {
     system(comand);      //png created
 
     ////////////////////////////////////////////////////////////////////////////////////////
-    
 
-    FILE* dump_txt = nullptr;
-
-    char txt_name[] = "dump*.txt";
-
-    txt_name[4] = (char)(iteration + 65);
-
-    if ((dump_txt = fopen(txt_name, "w")) == NULL) {
-        printf("File creating error");
-        return;
-    }
-
-    // dump_list(dump_txt, list, head, tail, free_head, list_size, file, func, line);
-
-    // ////////////////////////////////////////////////////////////////////////////////////////
     FILE* dump_html = nullptr;
 
     if ((dump_html = fopen("dump.html", "w")) == NULL) {
@@ -125,57 +108,10 @@ void make_html_dump(FILE* dot_file, TREE* tree) {
                            "<html>\n<body>\n");
     for(int i = 0; i <= iteration; i++) { 
         fprintf(dump_html, "<div> iteration : %d </div>\n", i);
-        //fprintf(dump_html, "<iframe src=\"dump%c.txt\" width=\"100%%\" height=\"300\">\n</iframe>\n", (char)(i + 65));
         fprintf(dump_html, "<img src=\"my_dot%c.png\" height=\"200\">\n", (char)(i + 65));
     }
 
     fprintf(dump_html, "</body>\n</html>\n");
 
-    //fclose(dump_txt);
-
     iteration++;
-    
 }
-
-// void dump_list(FILE* dump_file, NODE* list, int head, int tail, int free_head, unsigned int list_size, const char* file, const char* func, const int line) {
-//     const int NUMBER_OF_SPACES = 5;
-//     fprintf(dump_file, "\nDUMP called in file: %s\n"
-//             "In function: %s\n"
-//             "On line: %d\n", file, func, line);
-
-//     fprintf(dump_file,"\nSize of list: %d\n", list_size);
-//     fprintf(dump_file,"\nList head: %d\n", head);
-//     fprintf(dump_file,"List tail: %d\n", tail);
-//     fprintf(dump_file,"free list head: %d\n", free_head);
-
-//     fprintf(dump_file,"\nid:  ");
-
-//     for(unsigned int i = 0; i < list_size; i ++) {
-//         fprintf(dump_file, "%*d", NUMBER_OF_SPACES, i);
-//     } fprintf(dump_file, "\n\n");
-
-//     fprintf(dump_file, "data:");
-
-//     for(unsigned int i = 0; i < list_size; i ++) {
-//         if(list[i].data == FREE_DATA) 
-//             fprintf(dump_file, "%*s", NUMBER_OF_SPACES, "FREE");
-//         else if(list[i].data == POISON) 
-//             fprintf(dump_file, "%*s", NUMBER_OF_SPACES, "POIS");
-//         else 
-//             fprintf(dump_file, "%*d", NUMBER_OF_SPACES, list[i].data);
-//     }
-
-//     fprintf(dump_file, "\n\n");
-
-//     fprintf(dump_file, "next:");
-    
-//     for(unsigned int i = 0; i < list_size; i ++) {
-//         fprintf(dump_file, "%*d", NUMBER_OF_SPACES, list[i].next_id);
-//     } fprintf(dump_file, "\n\n");
-
-//     fprintf(dump_file, "prev:");
-
-//     for(unsigned int i = 0; i < list_size; i ++) {
-//         fprintf(dump_file, "%*d", NUMBER_OF_SPACES, list[i].prev_id);
-//     } fprintf(dump_file, "\n\n");
-// }

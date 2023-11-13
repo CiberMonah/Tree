@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "Tree.h"
 #include "Akinator.h"
+#include "Tree_dump.h"
 
 int main () {
     TREE tree = {};
@@ -19,6 +20,10 @@ int main () {
     op_new(&tree.root->left->left, "Anya");
     op_new(&tree.root->left->right, "Alina");
     op_new(&tree.root->right, "Andrei");
+
+    //make_dot_dump()
+
+
 
     // different types to print tree
 
