@@ -36,7 +36,7 @@ static void print_all_nodes (FILE* dot_file, NODE* node) {
     fprintf(dot_file, "}\n");
 }
 
-void make_dot_dump(FILE* dot_file, NODE* list, int head, int tail, int free_head, unsigned int list_size) {
+void make_dot_dump(FILE* dot_file, TREE* tree) {
     assert(dot_file != nullptr);
 
     fprintf(dot_file, "digraph G{"                          //set base settings and style
@@ -60,16 +60,16 @@ void make_dot_dump(FILE* dot_file, NODE* list, int head, int tail, int free_head
                                 "free[label = \"free\", shape = Mrecord, style = filled, fillcolor=\"#FFDDFF\", width = 1];\n"
                             "}\n");
     
-    print_all_nodes(dot_file, list);
+    print_all_nodes(dot_file, tree->root);
 
-    print_edges(dot_file, list, free_head, "#00C5CD");                 //make free edges
+    print_edges(dot_file, tree->root, "#00C5CD");                 //make free edges
 
     fprintf(dot_file, "}");
 }
 
 
 
-void make_html_dump(NODE* list, int head, int tail, int free_head, unsigned int list_size, const char* file, const char* func, const int line) {
+void make_html_dump(FILE* dot_file, TREE* tree) {
 
     FILE* file_dot = nullptr;
 
@@ -83,7 +83,7 @@ void make_html_dump(NODE* list, int head, int tail, int free_head, unsigned int 
     }
     
 
-    make_dot_dump(file_dot, list, head, tail, free_head, list_size);
+    make_dot_dump(file_dot, tree);
 
     
 
@@ -111,9 +111,9 @@ void make_html_dump(NODE* list, int head, int tail, int free_head, unsigned int 
         return;
     }
 
-    dump_list(dump_txt, list, head, tail, free_head, list_size, file, func, line);
+    // dump_list(dump_txt, list, head, tail, free_head, list_size, file, func, line);
 
-    ////////////////////////////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////////////////////////////
     FILE* dump_html = nullptr;
 
     if ((dump_html = fopen("dump.html", "w")) == NULL) {
@@ -125,7 +125,7 @@ void make_html_dump(NODE* list, int head, int tail, int free_head, unsigned int 
                            "<html>\n<body>\n");
     for(int i = 0; i <= iteration; i++) { 
         fprintf(dump_html, "<div> iteration : %d </div>\n", i);
-        fprintf(dump_html, "<iframe src=\"dump%c.txt\" width=\"100%%\" height=\"300\">\n</iframe>\n", (char)(i + 65));
+        //fprintf(dump_html, "<iframe src=\"dump%c.txt\" width=\"100%%\" height=\"300\">\n</iframe>\n", (char)(i + 65));
         fprintf(dump_html, "<img src=\"my_dot%c.png\" height=\"200\">\n", (char)(i + 65));
     }
 
