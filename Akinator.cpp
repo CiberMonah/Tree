@@ -4,16 +4,16 @@
 #include "Tree.h"
 #include "Akinator.h"
 
-static err_type save_data(NODE* root, FILE* fp) {
+static tree_err_type save_data(NODE* root, FILE* fp) {
     fp = fopen("akinator.txt", "w");
     print_pre_order(fp, root);
     fclose(fp);
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-static err_type parse_data(FILE* fp, FILE* dump_file, NODE** root) {
+static tree_err_type parse_data(FILE* fp, FILE* dump_file, NODE** root) {
     if(root == nullptr) 
-        return NO_ERR;
+        return TREE_NO_ERR;
     char word[10] = "";
     
     fscanf(fp, format, word);
@@ -35,25 +35,25 @@ static err_type parse_data(FILE* fp, FILE* dump_file, NODE** root) {
         fscanf(fp, "%s ", word);
     } else if (strcmp(word, "nil") == 0) {
         *root = nullptr;
-        return NO_ERR;
+        return TREE_NO_ERR;
     } else {
-        return NO_ERR;
+        return TREE_NO_ERR;
     }
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-static err_type load_data(NODE** root, FILE* fp, FILE* dump_file) {
+static tree_err_type load_data(NODE** root, FILE* fp, FILE* dump_file) {
     
     parse_data(fp, dump_file, root);
     printf("Loaded succesful\n");
     rewind(fp);
     fprintf(dump_file, "\nLOADED SUCCESFUL\n");
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-static err_type session (NODE* root) {
+static tree_err_type session (NODE* root) {
     if(!root) 
-        return NO_ERR;
+        return TREE_NO_ERR;
 
     char ch = 0;
     char answer[50] = "nothing", question[50] = "nothing";
@@ -69,7 +69,7 @@ static err_type session (NODE* root) {
     case 'Y':
         if(root->right == nullptr) {
             printf("HAHAHAHA I GUEST RIGHT!!!!  :D\n");
-            return NO_ERR;
+            return TREE_NO_ERR;
         } else {
             session(root->right);
         }
@@ -79,18 +79,18 @@ static err_type session (NODE* root) {
             printf("WHO IS IT?????\n");
             if(scanf("%s", answer) != 1) {
                 printf("Only one word in question and answer\n");  
-                return ERROR;
+                return TREE_ERROR;
             }
             printf("HOW IT DIFFER?????      \\_(:/))_/\n");
             if(scanf("%s", question) != 1) {
                 printf("Only one word in question and answer\n");  
-                return ERROR;
+                return TREE_ERROR;
             }
             op_new(&root->right, answer);
             op_new(&root->left, root->data);
             root->data = strdup(question);
             printf("OK....I WILL REMEMBER IT....  :^>\n");
-            return NO_ERR;
+            return TREE_NO_ERR;
         } else {
             session(root->left);
         }
@@ -100,7 +100,7 @@ static err_type session (NODE* root) {
         break;
     }
 
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
 static int give_definition(NODE* root, char* key) {
@@ -124,7 +124,12 @@ static int give_definition(NODE* root, char* key) {
     return 0;
 }
 
-err_type menu(const char* data_file_name, const char* dump_file_name) {
+static void compare_difinitions(NODE* root, char* key)
+{
+
+}
+
+tree_err_type menu(const char* data_file_name, const char* dump_file_name) {
     int com;
     TREE tree = {};
     FILE* in  = nullptr;
@@ -139,11 +144,11 @@ err_type menu(const char* data_file_name, const char* dump_file_name) {
         switch(com) {
         case 1:
             if((in = fopen(data_file_name, "r")) == nullptr) {
-                return FILE_OPEN_ERR;
+                return TREE_FILE_OPEN_ERR;
             }
 
             if((dump_file = fopen(dump_file_name, "w")) == nullptr) {
-                return FILE_OPEN_ERR;
+                return TREE_FILE_OPEN_ERR;
             }
 
             load_data(&tree.root, in, dump_file);
@@ -155,7 +160,7 @@ err_type menu(const char* data_file_name, const char* dump_file_name) {
 
         case 2:
             if((out = fopen(data_file_name, "w")) == nullptr) {
-                return FILE_OPEN_ERR;
+                return TREE_FILE_OPEN_ERR;
             
             }
             save_data(tree.root, out);
@@ -184,9 +189,9 @@ err_type menu(const char* data_file_name, const char* dump_file_name) {
             printf("\n");
             break;
         default:
-            return NO_ERR;
+            return TREE_NO_ERR;
         }
     }
 
-    return NO_ERR;
+    return TREE_NO_ERR;
 }

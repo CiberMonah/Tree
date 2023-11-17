@@ -18,19 +18,18 @@ struct TREE {
     unsigned int tree_size;
 };
 
-enum err_type {
-    NO_ERR          = 0,
-    ERROR           = -1,
+enum tree_err_type {
+    TREE_NO_ERR          = 0,
+    TREE_ERROR           = -1,
 
-    MEM_ALL_ERR     = 1 << 0,
-    FILE_OPEN_ERR   = 1 << 1,
-
+    TREE_MEM_ALL_ERR     = 1 << 0,
+    TREE_FILE_OPEN_ERR   = 1 << 1,
 };
 
-err_type op_new(NODE** node, Elem_t value);
-err_type tree_init(TREE* tree);
-err_type free_tree(TREE* tree);
-err_type branch_delete(NODE* root, const char* str);
+tree_err_type op_new(NODE** node, Elem_t value);
+tree_err_type tree_init(TREE* tree);
+tree_err_type free_tree(TREE* tree);
+tree_err_type branch_delete(NODE* root, const char* str);
 
 void print_pre_order(FILE* out, NODE* node);
 void print_in_order(FILE* out, NODE* node);
