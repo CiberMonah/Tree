@@ -5,7 +5,7 @@
 void stack_init(Stack* stk) {
     if(!stk)
         return;
-    stk->size = 0;
+    stk->size = MIN_STACK_SIZE;
     stk->top = 0;
     stk->data = (Stk_elem_t*)calloc(MIN_STACK_SIZE, sizeof(Stk_elem_t));
 }
@@ -53,10 +53,16 @@ void push(Stack* stk, Stk_elem_t elem) {
 
 Stk_elem_t pop(Stack *stk) {
     Stk_elem_t value = stk->data[stk->top];
+    stk->top--;
     stk->data[stk->top] = 0;
-    stk->top = 0;
     stack_resize_capacity(stk);
     return value;
+}
+
+void print_stack(Stack* stk) {
+    for(int i = 0; i < stk->size; i++) {
+        printf("%s\n", stk->data[i]);
+    }
 }
 
 

@@ -16,6 +16,7 @@ struct Stack {
 void stack_init(Stack* stk);
 void stack_dtor(Stack* stk);
 void push(Stack* stk, Stk_elem_t elem);
+void print_stack(Stack* stk);
 Stk_elem_t pop(Stack *stk);
 
 #endif

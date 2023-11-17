@@ -3,35 +3,35 @@
 #include <stdio.h>
 #include <string.h>
 
-err_type tree_init(TREE* tree) {
+tree_err_type tree_init(TREE* tree) {
     tree->tree_size = 0;
     tree->root = NULL;
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-static err_type free_nodes(NODE* node) {
+static tree_err_type free_nodes(NODE* node) {
     if(!node) {
-        return NO_ERR;
+        return TREE_NO_ERR;
     }
 
     free_nodes(node->left);
     free_nodes(node->right);
     free(node);
 
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-err_type free_tree(TREE* tree) {
+tree_err_type free_tree(TREE* tree) {
     tree->tree_size = -1;
 
     free_nodes(tree->root);
 
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-static err_type tree_delete(NODE* root) {
+static tree_err_type tree_delete(NODE* root) {
     if(!root) {
-        return NO_ERR;
+        return TREE_NO_ERR;
     }
     tree_delete(root->left);
     tree_delete(root->right);
@@ -39,10 +39,10 @@ static err_type tree_delete(NODE* root) {
     root->right = nullptr;
     free(root);
 
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-err_type branch_delete(NODE* root, const char* str) {
+tree_err_type branch_delete(NODE* root, const char* str) {
 
     if(strcmp(str, "left" ) == 0) {
         tree_delete(root->left);
@@ -57,21 +57,21 @@ err_type branch_delete(NODE* root, const char* str) {
         root->right = nullptr;
     } else {
         printf("Wrong code in branch delete func\n");
-        return ERROR;
+        return TREE_ERROR;
     }
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
-err_type op_new(NODE** node, Elem_t value) {
+tree_err_type op_new(NODE** node, Elem_t value) {
     *node = (NODE*)calloc(1, sizeof(NODE));
 
     if(node == nullptr)
-        return MEM_ALL_ERR;
+        return TREE_MEM_ALL_ERR;
     (*node)->data = strdup(value);
     (*node)->right = nullptr;
     (*node)->left = nullptr;
 
-    return NO_ERR;
+    return TREE_NO_ERR;
 }
 
 void print_pre_order(FILE* out, NODE* node) {

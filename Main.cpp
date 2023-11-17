@@ -10,7 +10,7 @@ int main () {
     FILE* out  = nullptr;
 
     if((out= fopen("tree.txt", "w")) == nullptr) {
-        return FILE_OPEN_ERR;
+        return TREE_FILE_OPEN_ERR;
     }
 
     tree_init(&tree);
