@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "Tree.h"
 #include "Akinator.h"
+#include "Src_Tree\Tree.h"
 #include "stack.h"
-#include "Tree_dump.h"
+#include "Src_Tree\Tree_dump.h"
 
 
 tree_err_type save_data(NODE* root, FILE* fp) {

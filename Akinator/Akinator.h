@@ -1,6 +1,6 @@
 #ifndef AKINATOR_H_INCLUDED
 #define AKINATOR_H_INCLUDED
-#include "Tree.h"
+#include "Src_Tree\Tree.h"
 
 tree_err_type menu(const char* data_file_name, const char* dump_file_name);
 tree_err_type save_data(NODE* root, FILE* fp);

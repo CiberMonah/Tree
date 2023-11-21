@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "Tree.h"
 #include "Tree_dump.h"
+#include "Tree.h"
 
 static void dot_dump(FILE* file, NODE* node, int* counter) {
 	int counter_now = *counter;

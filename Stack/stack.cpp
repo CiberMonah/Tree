@@ -179,6 +179,7 @@ stack_error_type stack_pop(Stack* stk, STK_Elem_t* poped) {
     }
 
     assert(0 && "fallthrough");
+    return NO_ERR;
 }
 
 static stack_error_type error_show(Stack* stk) {
@@ -233,7 +234,7 @@ stack_error_type stack_dump(Stack* stk, bool only_data, const char* file, const 
             if(stk->data[i] == VOID_ELEM)
                 printf("[%d] = (void)\n", i);
             else
-                printf("[%d] = %d\n", i, stk->data[i]);
+                printf("[%d] = %s\n", i, stk->data[i]);
         }
 
         return NO_ERR;
@@ -247,33 +248,33 @@ stack_error_type print_stack(Stack* stk) {
         if(stk->data[i] == VOID_ELEM)
             printf("[%d] = (void)\n", i);
         else
-            printf("[%d] = %d\n", i, stk->data[i]);
+            printf("[%d] = %s\n", i, stk->data[i]);
     }
     return NO_ERR;
 }
 
-static stack_error_type print_error(FILE* dumpfile, stack_error_type error) {
-    if(error == MEM_ALLOC_ERR) {
-        fprintf(dumpfile, "Memory allocation error\n");
-        return error;
-    } else if(error == NULL_PTR_ERR) {
-        fprintf(dumpfile, "Pointer is Null\n");
-        return error;
-    } else if(error == OUT_OF_INDEX_ERR) {
-        fprintf(dumpfile, "Index is out of range\n");
-        return error;
-    } else if(error == STACK_IS_NOT_EXIST) {
-        fprintf(dumpfile, "Stack is not exist\n");
-        return error;
-    } else if(error == STACK_HASH_ERR) {
-        fprintf(dumpfile, "Hash error\n");
-        return error;
-    } else if(error == NO_VOID_ELEM_ERR) {
-        fprintf(dumpfile, "Not all void elems have NO_ELEM value\n");
-    }
+// static stack_error_type print_error(FILE* dumpfile, stack_error_type error) {
+//     if(error == MEM_ALLOC_ERR) {
+//         fprintf(dumpfile, "Memory allocation error\n");
+//         return error;
+//     } else if(error == NULL_PTR_ERR) {
+//         fprintf(dumpfile, "Pointer is Null\n");
+//         return error;
+//     } else if(error == OUT_OF_INDEX_ERR) {
+//         fprintf(dumpfile, "Index is out of range\n");
+//         return error;
+//     } else if(error == STACK_IS_NOT_EXIST) {
+//         fprintf(dumpfile, "Stack is not exist\n");
+//         return error;
+//     } else if(error == STACK_HASH_ERR) {
+//         fprintf(dumpfile, "Hash error\n");
+//         return error;
+//     } else if(error == NO_VOID_ELEM_ERR) {
+//         fprintf(dumpfile, "Not all void elems have NO_ELEM value\n");
+//     }
 
-    return NO_ERR;
-}
+//     return NO_ERR;
+// }
 
 stack_error_type put_error(Stack* stk, stack_error_type error) {
     assert(stk->is_exist == 1);

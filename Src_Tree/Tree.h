@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 typedef char* Elem_t;
-//
 #define format "%s "            //To print or scanf any types
 
 struct NODE {
