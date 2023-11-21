@@ -37,6 +37,7 @@ static tree_err_type tree_delete(NODE* root) {
     tree_delete(root->right);
     root->left = nullptr;
     root->right = nullptr;
+    free(root->data);
     free(root);
 
     return TREE_NO_ERR;
@@ -66,7 +67,7 @@ tree_err_type op_new(NODE** node, Elem_t value) {
     *node = (NODE*)calloc(1, sizeof(NODE));
 
     if(node == nullptr)
-        return TREE_MEM_ALL_ERR;
+        return TREE_MEM_ALLOC_ERR;
     (*node)->data = strdup(value);
     (*node)->right = nullptr;
     (*node)->left = nullptr;
@@ -80,9 +81,12 @@ void print_pre_order(FILE* out, NODE* node) {
         return;
     }
     fprintf(out, "( ");
-    fprintf(out, format, node->data);
+
+        fprintf(out, format, node->data);
     print_pre_order(out, node->left);
+
     print_pre_order(out, node->right);
+
     fprintf(out, ") ");
 }
 
