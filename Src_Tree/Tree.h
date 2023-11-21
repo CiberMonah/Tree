@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 typedef char* Elem_t;
-#define format "%s "            //To print or scanf any types
+#define format "%s "
 
 struct NODE {
     Elem_t data;
@@ -23,7 +23,7 @@ enum tree_err_type {
     // ???
     TREE_ERROR           = -1,
 
-    TREE_MEM_ALLOC_ERR     = 1 << 0,
+    TREE_MEM_ALLOC_ERR   = 1 << 0,
     TREE_FILE_OPEN_ERR   = 1 << 1,
 };
 

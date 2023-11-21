@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Akinator.h"
-#include "Src_Tree\Tree_dump.h"
+#include "..\Src_Tree\Tree_dump.h"
 
 int main () {
     FILE* data_file = nullptr;
