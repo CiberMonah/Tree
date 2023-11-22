@@ -5,6 +5,8 @@
 #include "Tree.h"
 
 static void dot_dump(FILE* file, NODE* node, int* counter) {
+	setvbuf(file, NULL, _IONBF, 0);
+
 	int counter_now = *counter;
 
 	if (node != 0) {

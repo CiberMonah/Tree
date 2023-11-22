@@ -13,30 +13,47 @@ tree_err_type save_data(NODE* root, FILE* fp) {
     return TREE_NO_ERR;
 }
 
-static void read_word(char *word, size_t size, FILE *input) {
-	int symb = getc(input);
-	size_t ind = 0;
-	while (ind < size && symb != EOF && !isspace(symb)) {
-		word[ind++] = (char)getc(input);
-	}
+static int read_word(char *word, int size, FILE *input) {
+    char symb = '\0';
+    symb = (char)getc(input);
+    int i = 0;
+
+    while (symb != '(' && symb != ')'  && symb != EOF && i < size && symb != '\n') {
+        word[i++] = symb;
+        symb = (char)getc(input);
+
+        if(strcmp(word, "nil") == 0)
+            return 1;
+
+        if(i > 2) {                                            //Checking if nil was not read;
+            if (word[i - 1] == 'l' && word[i - 2] == 'i' && word[i - 3] == 'n') {
+                ungetc(symb, input);
+                ungetc(symb, input);
+                ungetc(symb, input);
+                word[i - 4] = '\0';
+                return 0;
+            }
+            printf("%s\n", word);
+        }
+    }
+    if(symb == '(' || symb == ')')
+        word[0] = symb;
+    getc(input);
+    return 0;
 }
 
 static tree_err_type parse_data(FILE* fp, FILE* dump_file, NODE** root) {
     if(root == nullptr) 
         return TREE_NO_ERR;
-    char word[10] = "";
+    char word[SIZE_OF_WORD] = "";
     
-    fscanf(fp, format, word);
-
-    if(strcmp(word, "(") != 0)
-        fprintf(dump_file, "%s\n", word);
+    read_word(word, SIZE_OF_WORD, fp);
+    printf("%s\n", word);
 
     if(strcmp(word, "(") == 0) {
-        fscanf(fp, format, word);
+        read_word(word, SIZE_OF_WORD, fp);
         fprintf(dump_file, "read root: %s\n", word);
-
         op_new(root, word);
-
         fprintf(dump_file, "parsing left tree...%s\n", word);
         parse_data(fp, dump_file, &((*root)->left));
         fprintf(dump_file, "parsing right tree...%s\n", word);
@@ -53,8 +70,8 @@ static tree_err_type parse_data(FILE* fp, FILE* dump_file, NODE** root) {
 }
 
 tree_err_type load_data(NODE** root, FILE* fp, FILE* dump_file) {
-    
     parse_data(fp, stdout, root);
+
     printf("Loaded succesful\n");
     rewind(fp);
     fprintf(dump_file, "\nLOADED SUCCESFUL\n");
@@ -87,18 +104,22 @@ tree_err_type guess_session (NODE* root) {
     case 'N':
         if(root->left == nullptr) {
             printf("WHO IS IT?????\n");
-            if(scanf("%s", answer) != 1) {
-                printf("Only one word in question and answer\n");  
-                return TREE_ERROR;
-            }
+
+            getchar();
+
+            read_word(answer, SIZE_OF_WORD, stdin);
+
             printf("HOW IT DIFFER?????      \\_(:/))_/\n");
-            if(scanf("%s", question) != 1) {
-                printf("Only one word in question and answer\n");  
-                return TREE_ERROR;
-            }
+
+            getchar();
+
+            read_word(question, SIZE_OF_WORD, stdin);
+
             op_new(&root->right, answer);
             op_new(&root->left, root->data);
+
             root->data = strdup(question);
+
             printf("OK....I WILL REMEMBER IT....  :^>\n");
             return TREE_NO_ERR;
         } else {

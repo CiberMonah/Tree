@@ -6,7 +6,6 @@
 int main () {
     FILE* data_file = nullptr;
     FILE* dump_file = nullptr;
-    FILE* dot_file = nullptr;;
 
     const char* data_file_name = "akinator.txt";
     const char* dump_file_name = "dump_akinator.txt";
@@ -33,6 +32,7 @@ int main () {
     while((scanf("%d", &comand))) {
         switch(comand) {
         case 1:
+
             if((data_file = fopen(data_file_name, "r")) == nullptr) {
                 return TREE_FILE_OPEN_ERR;
             }
@@ -49,6 +49,7 @@ int main () {
             break;
 
         case 2:
+
             if((data_file = fopen(data_file_name, "w")) == nullptr) {
                 return -1;
             }
@@ -58,43 +59,58 @@ int main () {
             fclose(data_file);
 
             printf("Saved!\n");
+
             break;
 
         case 3:
+
             print_pre_order(stdout, tree.root);
             fprintf(stdout, "\n");
 
             break;
 
         case 4:
+
             guess_session(tree.root);
 
             break;
+
         case 5:
+
             printf("I CAN GIVE DEFINITION FOR ANYTHING!\nType your subject:\n");
             scanf("%s", str1);
+
             if(!give_definition(tree.root, str1))
                 printf("OOOOPS I CANT GIVE DEFINITION FOR IT...:(");
             printf("\n");
 
             break;
+
         case 6:
+
             printf("I cant compare everithing!!!!\n");
             printf("Print two objects\n");
             scanf("%s %s", str2, str1);
             compare_difinitions(tree.root, str2, str1);
 
             break;
+
         case 7:
             
             make_png_dump("akinator.dot", tree.root, &counter);
 
             break;
+
         case 9:
+
             return 0;
+
             break;
+
         default:
+
             break;
+            
         }
     }
 
