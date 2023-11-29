@@ -96,7 +96,6 @@ int main () {
             break;
 
         case 7:
-            
             make_png_dump("akinator.dot", tree.root, &counter);
 
             break;

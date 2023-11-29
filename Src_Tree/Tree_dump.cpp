@@ -38,5 +38,7 @@ void make_png_dump(const char* file_name , NODE* node, int* counter) {
 
 	fclose(dot_file);
 
-	system("dot tree.dot -T png -o tree.png");
+	system("dot akinator.dot -T png -o tree.png");
+
+
 }

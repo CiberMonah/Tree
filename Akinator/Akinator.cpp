@@ -48,7 +48,6 @@ static int read_word(char *word, int size, FILE *input) {
         word[0] = symb;
         symb = (char)getc(input);
 
-        printf("ASDDSA - %s\n", word);
         return 0;
     }
     
